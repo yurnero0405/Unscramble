@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GameScreen() {
 
-    // Stores the user's answer
+    // Stores what the user types
     var userAnswer by remember {
         mutableStateOf("")
     }
@@ -54,10 +54,17 @@ fun GameScreen() {
         mutableStateOf(0)
     }
 
-    // Gets the current correct answer
+    // The correct answer
     val correctAnswer = words[currentWordIndex]
 
-    // Stores the score
+    // The scrambled word shown to the player
+    var scrambledWord by remember {
+        mutableStateOf(
+            words[0].shuffled().joinToString("")
+        )
+    }
+
+    // Player's score
     var score by remember {
         mutableStateOf(0)
     }
@@ -73,9 +80,9 @@ fun GameScreen() {
             fontSize = 30.sp
         )
 
-        // Displays the current word
+        // Display the scrambled word
         Text(
-            text = correctAnswer,
+            text = scrambledWord,
             fontSize = 40.sp
         )
 
@@ -95,17 +102,25 @@ fun GameScreen() {
 
         Button(
             onClick = {
+
+                // Check if the answer is correct
                 if (userAnswer == correctAnswer) {
 
                     // Increase score
                     score++
 
-                    // Move to the next word if available
+                    // Move to the next word
                     if (currentWordIndex < words.size - 1) {
+
                         currentWordIndex++
 
-                        // Clear the input field
+                        // Clear the answer field
                         userAnswer = ""
+
+                        // Scramble the new word
+                        scrambledWord = words[currentWordIndex]
+                            .shuffled()
+                            .joinToString("")
                     }
                 }
             }
